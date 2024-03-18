@@ -231,4 +231,10 @@ const inventoryController = {
       }
     }
   };
-  
+
+  module.exports = {
+    productController,
+    supplierController,
+    orderController,
+    inventoryController
+  }
