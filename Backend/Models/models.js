@@ -90,8 +90,18 @@ Product.belongsTo(Supplier);
 Order.belongsToMany(Product, { through: 'OrderDetails' });
 Product.belongsToMany(Order, { through: 'OrderDetails' });
   
+const syncModels = async () => {
+    try {
+        await sequelize.sync({ alter: true });
+        console.log('Models synced successfully');
+    } catch (error) {
+        console.error('Error syncing models:', error);
+    }
+};
+
 module.exports = {
     sequelize,
+    syncModels,
     Product,
     Supplier,
     Order,
