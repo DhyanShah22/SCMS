@@ -53,6 +53,20 @@ const Order = sequelize.define('Order', {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
+    },
+    customerId: {
+        type: Sequelize.INTEGER,
+        allowNull: false 
+    },
+    orderDate: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW 
+    },
+    status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'pending' 
     }
 })
 
