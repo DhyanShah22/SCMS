@@ -1,12 +1,12 @@
-const Sequelize = require('sequelize')
-require('dotenv').config()
+const Sequelize = require('sequelize');
+require('dotenv').config();
 
 const {
     DB_HOST,
     DB_USER,
     DB_PASSWORD,
     DB_NAME
-} = process.env
+} = process.env;
 
 const sequelize = new Sequelize({
     dialect: 'mysql',
@@ -14,7 +14,7 @@ const sequelize = new Sequelize({
     username: DB_USER,
     password: DB_PASSWORD,
     database: DB_NAME,
-  });
+});
 
 const Product = sequelize.define('Product', {
     id: {
@@ -34,19 +34,27 @@ const Product = sequelize.define('Product', {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false
     }
-})
+});
 
 const Supplier = sequelize.define('Supplier', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
     },
     name: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-})
+    },
+    phone: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    }
+});
 
 const Order = sequelize.define('Order', {
     id: {
@@ -68,28 +76,38 @@ const Order = sequelize.define('Order', {
         allowNull: false,
         defaultValue: 'pending' 
     }
-})
+});
+
+const OrderDetails = sequelize.define('OrderDetails', {});
 
 const Inventory = sequelize.define('Inventory', {
     id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
     productId: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
+        type: Sequelize.INTEGER,
+        allowNull: false
     },
     quantity: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
-  });
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
+});
 
 Product.belongsTo(Supplier);
-Order.belongsToMany(Product, { through: 'OrderDetails' });
-Product.belongsToMany(Order, { through: 'OrderDetails' });
-  
+Supplier.hasMany(Product);
+
+Order.belongsTo(Customer, { foreignKey: 'customerId' });
+Customer.hasMany(Order, { foreignKey: 'customerId' });
+
+Order.belongsToMany(Product, { through: OrderDetails });
+Product.belongsToMany(Order, { through: OrderDetails });
+
+Inventory.belongsTo(Product, { foreignKey: 'productId' });
+Product.hasOne(Inventory, { foreignKey: 'productId' });
+
 const syncModels = async () => {
     try {
         await sequelize.sync({ alter: true });
@@ -106,4 +124,4 @@ module.exports = {
     Supplier,
     Order,
     Inventory
-}
+};
