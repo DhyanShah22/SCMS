@@ -17,96 +17,131 @@ const sequelize = new Sequelize({
 });
 
 const Product = sequelize.define('Product', {
-    id: {
+    ProductID: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    name:{
+    Name: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    description: {
+    Description: {
         type: Sequelize.TEXT,
         allowNull: true
     },
-    price: {
+    Price: {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false
     }
 });
 
 const Supplier = sequelize.define('Supplier', {
-    id: {
+    SupplierID: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    name: {
+    Name: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
     },
-    phone: {
+    Phone: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: true
     },
-    email: {
+    Email: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: true
     }
 });
 
 const Order = sequelize.define('Order', {
-    id: {
+    OrderID: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    customerId: {
+    CustomerID: {
         type: Sequelize.INTEGER,
-        allowNull: false 
+        allowNull: false
     },
-    orderDate: {
+    OrderDate: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW 
+        defaultValue: Sequelize.NOW
     },
-    status: {
+    Status: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'pending' 
+        defaultValue: 'pending'
     }
 });
 
-const OrderDetails = sequelize.define('OrderDetails', {});
+const OrderDetails = sequelize.define('OrderDetails', {
+    OrderID: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+    },
+    ProductID: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+    },
+    SupplierID: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
+});
 
-const Inventory = sequelize.define('Inventory', {
-    id: {
+const Customer = sequelize.define('Customer', {
+    CustomerID: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    productId: {
+    Name: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    Email: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
+    Phone: {
+        type: Sequelize.STRING,
+        allowNull: true
+    }
+});
+
+const Inventory = sequelize.define('Inventory', {
+    InventoryID: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    ProductID: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    quantity: {
+    Quantity: {
         type: Sequelize.INTEGER,
         allowNull: false
     }
 });
 
-Product.belongsTo(Supplier);
-Supplier.hasMany(Product);
+Order.belongsTo(Customer, { foreignKey: 'CustomerID' });
+Customer.hasMany(Order, { foreignKey: 'CustomerID' });
 
-Order.belongsTo(Customer, { foreignKey: 'customerId' });
-Customer.hasMany(Order, { foreignKey: 'customerId' });
+Order.hasMany(OrderDetails, { foreignKey: 'OrderID' });
+Product.hasMany(OrderDetails, { foreignKey: 'ProductID' });
+Supplier.hasMany(OrderDetails, { foreignKey: 'SupplierID' });
 
-Order.belongsToMany(Product, { through: OrderDetails });
-Product.belongsToMany(Order, { through: OrderDetails });
+OrderDetails.belongsTo(Order, { foreignKey: 'OrderID' });
+OrderDetails.belongsTo(Product, { foreignKey: 'ProductID' });
+OrderDetails.belongsTo(Supplier, { foreignKey: 'SupplierID' });
 
-Inventory.belongsTo(Product, { foreignKey: 'productId' });
-Product.hasOne(Inventory, { foreignKey: 'productId' });
+Product.hasOne(Inventory, { foreignKey: 'ProductID' });
+Inventory.belongsTo(Product, { foreignKey: 'ProductID' });
 
 const syncModels = async () => {
     try {
@@ -123,5 +158,7 @@ module.exports = {
     Product,
     Supplier,
     Order,
+    OrderDetails,
+    Customer,
     Inventory
 };
