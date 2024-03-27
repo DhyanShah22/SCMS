@@ -78,7 +78,7 @@ const Order = sequelize.define('Order', {
     }
 });
 
-const OrderDetails = sequelize.define('OrderDetails', {
+const OrderItems = sequelize.define('OrderItems', {
     OrderID: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -132,13 +132,13 @@ const Inventory = sequelize.define('Inventory', {
 Order.belongsTo(Customer, { foreignKey: 'CustomerID' });
 Customer.hasMany(Order, { foreignKey: 'CustomerID' });
 
-Order.hasMany(OrderDetails, { foreignKey: 'OrderID' });
-Product.hasMany(OrderDetails, { foreignKey: 'ProductID' });
-Supplier.hasMany(OrderDetails, { foreignKey: 'SupplierID' });
+Order.hasMany(OrderItems, { foreignKey: 'OrderID' });
+Product.hasMany(OrderItems, { foreignKey: 'ProductID' });
+Supplier.hasMany(OrderItems, { foreignKey: 'SupplierID' });
 
-OrderDetails.belongsTo(Order, { foreignKey: 'OrderID' });
-OrderDetails.belongsTo(Product, { foreignKey: 'ProductID' });
-OrderDetails.belongsTo(Supplier, { foreignKey: 'SupplierID' });
+OrderItems.belongsTo(Order, { foreignKey: 'OrderID' });
+OrderItems.belongsTo(Product, { foreignKey: 'ProductID' });
+OrderItems.belongsTo(Supplier, { foreignKey: 'SupplierID' });
 
 Product.hasOne(Inventory, { foreignKey: 'ProductID' });
 Inventory.belongsTo(Product, { foreignKey: 'ProductID' });
@@ -158,7 +158,7 @@ module.exports = {
     Product,
     Supplier,
     Order,
-    OrderDetails,
+    OrderItems,
     Customer,
     Inventory
 };
