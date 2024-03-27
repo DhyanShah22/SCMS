@@ -1,7 +1,9 @@
-const Product = require('../Models/models')
+const {Product, Supplier} = require('../Models/models')
 const multer = require('multer')
+const path = require('path');
+const fs = require('fs');
 
-const storage = multerStorageMySQL({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/'); // Destination directory for storing uploaded files
   },
@@ -23,39 +25,43 @@ const upload = multer({ storage: storage }).single('image');
     }
   
     // Create a new product
-    const createProduct= async (req, res) => {
-      try {
-
-        upload(req, res, async function (err) {
-          if(err instanceof multer.MulterError) {
-            return res.status(500).json({ error: 'Multer Error', message: err.message })
-          } else if (err) {
-            return res.status(500).json({ error: 'Error uploading file', message: err.message });
-          }
-        })
-        const { Name, Description, Price, SupplierID } = req.body;
-        const { filename } = req.file; // Get the filename of the uploaded file
-        
-        if (!SupplierID) {
-          return res.status(400).json({ error: 'Supplier ID is required' });
-        }
-  
-        const supplier = await Supplier.findByPk(SupplierID);
-        if (!supplier) {
-          return res.status(404).json({ error: 'Supplier not found' });
-        }
-  
-        const newProduct = await Product.create({ Name, Description, Price, ImagePath: filename });
-  
-        // Associate the product with the supplier
-        await newProduct.setSupplier(supplier);
-  
-        res.status(201).json(newProduct);
-      } catch (error) {
-        console.error('Error creating product:', error);
-        res.status(500).json({ error: 'Internal server error' });
+// Create a new product
+const createProduct = async (req, res) => {
+  try {
+    upload(req, res, async function (err) {
+      if (err instanceof multer.MulterError) {
+        return res.status(500).json({ error: 'Multer Error', message: err.message });
+      } else if (err) {
+        return res.status(500).json({ error: 'Error uploading file', message: err.message });
       }
-    }
+
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+
+      const { Name, Description, Price, SupplierID } = req.body;
+
+      if (!SupplierID) {
+        return res.status(400).json({ error: 'Supplier ID is required' });
+      }
+
+      const supplier = await Supplier.findByPk(SupplierID);
+      if (!supplier) {
+        return res.status(404).json({ error: 'Supplier not found' });
+      }
+
+      const newProduct = await Product.create({ Name, Description, Price, ImagePath: req.file.filename });
+
+      // Associate the product with the supplier
+      await newProduct.setSupplier(supplier);
+
+      res.status(201).json(newProduct); // Send response here
+    });
+  } catch (error) {
+    console.error('Error creating product:', error);
+    res.status(500).json({ error: 'Internal server error' }); // Send error response here
+  }
+};
   
     const updateProduct= async (req, res) => {
       try {
