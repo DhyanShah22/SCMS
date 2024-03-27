@@ -34,7 +34,8 @@ const upload = multer({ storage: storage }).single('image');
           }
         })
         const { Name, Description, Price, SupplierID } = req.body;
-  
+        const { filename } = req.file; // Get the filename of the uploaded file
+        
         if (!SupplierID) {
           return res.status(400).json({ error: 'Supplier ID is required' });
         }
@@ -44,7 +45,7 @@ const upload = multer({ storage: storage }).single('image');
           return res.status(404).json({ error: 'Supplier not found' });
         }
   
-        const newProduct = await Product.create({ Name, Description, Price });
+        const newProduct = await Product.create({ Name, Description, Price, ImagePath: filename });
   
         // Associate the product with the supplier
         await newProduct.setSupplier(supplier);
