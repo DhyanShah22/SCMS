@@ -1,4 +1,16 @@
 const Product = require('../Models/models')
+const multer = require('multer')
+
+const storage = multerStorageMySQL({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Destination directory for storing uploaded files
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Unique filename for the uploaded file
+  },
+});
+
+const upload = multer({ storage: storage }).single('image'); 
 
     const getAllProducts= async (req, res) => {
       try {
@@ -13,6 +25,14 @@ const Product = require('../Models/models')
     // Create a new product
     const createProduct= async (req, res) => {
       try {
+
+        upload(req, res, async function (err) {
+          if(err instanceof multer.MulterError) {
+            return res.status(500).json({ error: 'Multer Error', message: err.message })
+          } else if (err) {
+            return res.status(500).json({ error: 'Error uploading file', message: err.message });
+          }
+        })
         const { Name, Description, Price, SupplierID } = req.body;
   
         if (!SupplierID) {
