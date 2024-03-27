@@ -1,4 +1,4 @@
-const Inventory = require('../Models/models')
+const {Inventory, Product} = require('../Models/models')
 
 const getInventory= async (req, res) => {
     try {
