@@ -129,6 +129,7 @@ const Inventory = sequelize.define('Inventory', {
     }
 });
 
+Product.belongsTo(Supplier);
 Order.belongsTo(Customer, { foreignKey: 'CustomerID' });
 Customer.hasMany(Order, { foreignKey: 'CustomerID' });
 
