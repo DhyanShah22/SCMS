@@ -25,7 +25,7 @@ const getInventoryItemById= async (req, res) => {
     }
   }
 
-const createInventoryItem= async (req, res) => {
+  const createInventoryItem= async (req, res) => {
     try {
       const { ProductID, Quantity } = req.body;
 
@@ -44,7 +44,7 @@ const createInventoryItem= async (req, res) => {
       console.error('Error creating inventory item:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-  }  
+  }
 
   // Update inventory
 const updateInventory= async (req, res) => {
