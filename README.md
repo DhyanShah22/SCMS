@@ -1,4 +1,4 @@
-# Sequelize Database Project
+# Supply Chain Management System (Database Project)
 
 This project showcases the usage of Sequelize ORM (Object-Relational Mapping) with a MySQL database. It provides models for managing products, suppliers, orders, customers, and inventory.
 
