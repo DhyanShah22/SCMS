@@ -79,6 +79,10 @@ const Order = sequelize.define('Order', {
         type: Sequelize.STRING,
         allowNull: false,
         defaultValue: 'pending'
+    },
+    TotalQuantity: {
+        type: Sequelize.INTEGER,
+        allowNull: false
     }
 });
 
