@@ -1,4 +1,5 @@
-const Customer = require('../Models/models')
+const { Customer } = require('../Models/models')
+console.log(Customer);
 
 const getAllCustomers= async (req, res) => {
     try {
