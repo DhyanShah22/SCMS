@@ -1,4 +1,4 @@
-const {OrderItems,Order, Supplier, Product} = require('../Models/models')
+const {OrderItems,Order, Product} = require('../Models/models')
 
 const getAllOrderDetails= async (req, res) => {
     try {
@@ -12,21 +12,20 @@ const getAllOrderDetails= async (req, res) => {
 
 const createOrderDetail= async (req, res) => {
     try {
-      const { OrderID, ProductID, SupplierID } = req.body;
+      const { OrderID, ProductID, Quantity } = req.body;
 
-      if (!OrderID || !ProductID || !SupplierID) {
-        return res.status(400).json({ error: 'Order ID, Product ID, and Supplier ID are required' });
+      if (!OrderID || !ProductID) {
+        return res.status(400).json({ error: 'Order ID, Product ID, and Quantity are required' });
       }
 
       const order = await Order.findByPk(OrderID);
       const product = await Product.findByPk(ProductID);
-      const supplier = await Supplier.findByPk(SupplierID);
 
-      if (!order || !product || !supplier) {
-        return res.status(404).json({ error: 'Order, Product, or Supplier not found' });
+      if (!order || !product ) {
+        return res.status(404).json({ error: 'Order, Product, or quantity not found' });
       }
 
-      const newOrderDetail = await OrderItems.create({ OrderID, ProductID, SupplierID });
+      const newOrderDetail = await OrderItems.create({ OrderID, ProductID, Quantity });
       res.status(201).json(newOrderDetail);
     } catch (error) {
       console.error('Error creating order detail:', error);
@@ -37,8 +36,8 @@ const createOrderDetail= async (req, res) => {
 const updateOrderDetail= async (req, res) => {
   try {
     const { id } = req.params;
-    const { OrderID, ProductID, SupplierID } = req.body;
-    await OrderItems.update({ OrderID, ProductID, SupplierID }, { where: { id } });
+    const { OrderID, ProductID, Quantity } = req.body;
+    await OrderItems.update({ OrderID, ProductID, Quantity }, { where: { id } });
     res.status(200).json({ message: 'Order detail updated successfully' });
   } catch (error) {
     console.error('Error updating order detail:', error);

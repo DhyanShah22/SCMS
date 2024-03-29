@@ -84,10 +84,6 @@ const Order = sequelize.define('Order', {
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    ProductID: {
-        type: Sequelize.INTEGER, // Add ProductID column
-        allowNull: false
-    }
 });
 
 const OrderItems = sequelize.define('OrderItems', {
@@ -99,10 +95,10 @@ const OrderItems = sequelize.define('OrderItems', {
         type: Sequelize.INTEGER,
         primaryKey: true,
     },
-    SupplierID: {
+    Quantity: {
         type: Sequelize.INTEGER,
         allowNull: false
-    }
+    },
 });
 
 const Customer = sequelize.define('Customer', {
