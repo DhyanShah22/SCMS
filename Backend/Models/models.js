@@ -83,6 +83,10 @@ const Order = sequelize.define('Order', {
     TotalQuantity: {
         type: Sequelize.INTEGER,
         allowNull: false
+    },
+    ProductID: {
+        type: Sequelize.INTEGER, // Add ProductID column
+        allowNull: false
     }
 });
 
@@ -138,6 +142,7 @@ const Inventory = sequelize.define('Inventory', {
 });
 
 Product.belongsTo(Supplier);
+Order.belongsTo(Product, { foreignKey: 'ProductID' });
 Order.belongsTo(Customer, { foreignKey: 'CustomerID' });
 Customer.hasMany(Order, { foreignKey: 'CustomerID' });
 

@@ -1,13 +1,17 @@
-const {Order, Customer} = require('../Models/models')
+const {Order, Customer, Product} = require('../Models/models')
 
     const createOrder= async (req, res) => {
       try {
-        const { CustomerID, OrderDate, Status, TotalQuantity } = req.body;
+        const { CustomerID, OrderDate, Status, TotalQuantity, ProductID } = req.body;
         const customer = await Customer.findByPk(CustomerID);
         if (!customer) {
           return res.status(404).json({ error: 'Customer not found' });
         }
-        const newOrder = await Order.create({ CustomerID, OrderDate, Status, TotalQuantity });
+        const product = await Product.findByPk(ProductID)
+        if (!product) {
+          return res.status(404).json({ error: 'Customer not found' });
+        }
+        const newOrder = await Order.create({ CustomerID, OrderDate, Status, TotalQuantity, ProductID });
         res.status(201).json(newOrder);
       } catch (error) {
         console.error('Error creating order:', error);
@@ -42,8 +46,8 @@ const {Order, Customer} = require('../Models/models')
     const updateOrder= async (req, res) => {
       try {
         const { OrderID } = req.params;
-        const { CustomerID, OrderDate, Status } = req.body;
-        const [updatedRows] = await Order.update({ CustomerID, OrderDate, Status }, { where: { OrderID } });
+        const { CustomerID, OrderDate, Status,TotalQuantity, ProductID } = req.body;
+        const [updatedRows] = await Order.update({ CustomerID, OrderDate, Status, TotalQuantity, ProductID }, { where: { OrderID } });
         if (updatedRows === 0) {
           return res.status(404).json({ error: 'Order not found' });
         }
