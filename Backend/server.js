@@ -13,6 +13,7 @@ const inventoryRoutes = require('./Routes/inventoryRoutes')
 const orderItemsRoutes = require('./Routes/orderItemsRoutes')
 const orderRoutes = require('./Routes/orderRoutes')
 const productRoutes = require('./Routes/productRoutes')
+const authRoutes = require('./Routes/authRoutes')
 
 const app = express()
 app.use(morgan('dev'));
@@ -29,6 +30,7 @@ app.use('/api', inventoryRoutes)
 app.use('/api', customerRoutes)
 app.use('/api', orderRoutes)
 app.use('/api', orderItemsRoutes)
+app.use('/api', authRoutes)
 
 
 

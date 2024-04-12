@@ -7,10 +7,11 @@ const {
     updateCustomer,
     deleteCustomer
 } = require('../Controllers/customerController')
+const authMiddleware = require('../Middelware/authCust')
 
 router.get('/customers', getAllCustomers);
-router.post('/customers', createCustomer);
-router.put('/customers/:id', updateCustomer);
-router.delete('/customers/:id', deleteCustomer);
+router.post('/customers',authMiddleware, createCustomer);
+router.put('/customers/:id',authMiddleware, updateCustomer);
+router.delete('/customers/:id',authMiddleware, deleteCustomer);
 
 module.exports = router

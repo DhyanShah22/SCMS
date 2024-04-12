@@ -137,6 +137,27 @@ const Inventory = sequelize.define('Inventory', {
     }
 });
 
+
+const User = sequelize.define('User',{
+    UserID:{
+        type:Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    username:{
+        type :Sequelize.STRING ,
+        unique :true ,
+        allowNull :false
+    },
+    password : {
+        type:Sequelize.STRING,
+        allowNull:false
+    },
+    role:{
+        type:Sequelize.ENUM("Supplier","Consumer"),
+    }
+}) 
+
 Product.belongsTo(Supplier);
 Order.belongsTo(Product, { foreignKey: 'ProductID' });
 Order.belongsTo(Customer, { foreignKey: 'CustomerID' });
@@ -165,6 +186,7 @@ const syncModels = async () => {
 module.exports = {
     sequelize,
     syncModels,
+    User,
     Product,
     Supplier,
     Order,
