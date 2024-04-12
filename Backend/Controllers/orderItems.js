@@ -22,7 +22,7 @@ const createOrderDetail= async (req, res) => {
       const product = await Product.findByPk(ProductID);
       const supplier = await  Supplier.findByPk(SupplierID);
 
-      if (!order || !product ) {
+      if (!order || !product ||supplier ) {
         return res.status(404).json({ error: 'Order, Product, Supplier, or quantity not found' });
       }
 
