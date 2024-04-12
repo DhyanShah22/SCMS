@@ -13,7 +13,7 @@ const exp = require('constants');
 router.get('/inventory', getInventory);
 router.get('/inventory/:InventoryID', getInventoryItemById);
 router.post('/inventory', createInventoryItem);
-router.put('/inventory/:InventoryID', updateInventory);
+router.patch('/inventory/:InventoryID', updateInventory);
 router.delete('/inventory/:InventoryID', deleteInventory);
 
 module.exports = router
